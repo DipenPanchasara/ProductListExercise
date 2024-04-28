@@ -8,17 +8,8 @@
 import Foundation
 import Combine
 
-struct NetworkResponse {
-  var data: Data?
-  let response: HTTPURLResponse
-}
-
 protocol NetworkProvider {
-  func execute(networkRequest: NetworkRequest) -> NetworkResponse
-}
-
-enum NetworkError: Error {
-  case invalidURL
+  func execute(networkRequest: NetworkRequest) -> AnyPublisher<NetworkResponse, NetworkError>
 }
 
 final class NetworkManager: NetworkProvider {
@@ -43,7 +34,9 @@ final class NetworkManager: NetworkProvider {
     self.session = URLSession(configuration: URLSessionConfiguration.ephemeral)
   }
 
-  func execute(networkRequest: NetworkRequest) -> NetworkResponse {
-    NetworkResponse(response: HTTPURLResponse())
+  func execute(networkRequest: NetworkRequest) -> AnyPublisher<NetworkResponse, NetworkError> {
+    Just<NetworkResponse>(NetworkResponse(response: HTTPURLResponse()))
+      .setFailureType(to: NetworkError.self)
+      .eraseToAnyPublisher()
   }
 }
