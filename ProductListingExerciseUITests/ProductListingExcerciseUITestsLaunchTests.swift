@@ -1,13 +1,13 @@
 //
-//  ProductListingExcerciseUITestsLaunchTests.swift
-//  ProductListingExcerciseUITests
+//  ProductListingExerciseUITests.swift
+//  ProductListingExerciseUITests
 //
 //  Created by Dipen Panchasara on 28/04/2024.
 //
 
 import XCTest
 
-final class ProductListingExcerciseUITestsLaunchTests: XCTestCase {
+final class ProductListingExerciseUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

@@ -20,7 +20,7 @@ struct NetworkRequest: Equatable {
   let endPoint: String
   let data: Data?
   
-  init(httpMethod: HTTPMethod, endPoint: String, data: Data?) {
+  init(httpMethod: HTTPMethod, endPoint: String, data: Data? = nil) {
     self.httpMethod = httpMethod
     self.endPoint = endPoint
     self.data = data
