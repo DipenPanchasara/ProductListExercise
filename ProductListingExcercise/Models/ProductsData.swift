@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct ProductsData: Decodable {
+struct ProductsData: Codable {
   let hits: [ProductData]
 }
 
 extension ProductsData {
-  struct ProductData: Decodable {
+  struct ProductData: Codable {
     let id: Int
     let title: String
     let labels: [String]?
@@ -23,7 +23,7 @@ extension ProductsData {
 }
 
 extension ProductsData {
-  struct Media: Decodable {
+  struct Media: Codable {
     let id: Int
     let product_id: Int
     let src: String?

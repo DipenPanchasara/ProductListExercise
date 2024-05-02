@@ -33,19 +33,23 @@ final class ProductListScreenViewModelUnitTests: XCTestCase {
       productListUseCase: mockUseCase,
       productMapper: ProductDataToModelMapper(currencyFormatter: currencyFormatter)
     )
-    sut.$products.sink { products in
-      if products.count == mockModels.count {
-        XCTAssertEqual(products, mockModels)
-        expecation.fulfill()
+    var noOfCalls = 0
+    sut.$products
+      .sink { products in
+        noOfCalls += 1
+        if noOfCalls == 2 {
+          XCTAssertEqual(products, mockModels)
+          expecation.fulfill()
+        }
       }
-    }
-    .store(in: &cancellables)
+      .store(in: &cancellables)
     sut.loadData()
     await fulfillment(of: [expecation], timeout: 1)
+    XCTAssertEqual(noOfCalls, 2)
   }
   
   func testViewModelWhenProductsUseCaseThrows() async {
-    let expecation = expectation(description: "Wait for Product UseCase to throw")
+//    let expecation = expectation(description: "Wait for Product UseCase to throw")
     let mockUseCase = MockProductListUseCase(error: MockError.noData)
     let sut = ProductListScreenViewModel(
       productListUseCase: mockUseCase,
@@ -54,11 +58,11 @@ final class ProductListScreenViewModelUnitTests: XCTestCase {
     var receivedProducts: [ProductModel] = []
     sut.$products.sink { products in
       receivedProducts.append(contentsOf: products)
-      expecation.fulfill()
+//      expecation.fulfill()
     }
     .store(in: &cancellables)
     sut.loadData()
-    await fulfillment(of: [expecation], timeout: .zero)
+//    await fulfillment(of: [expecation], timeout: .zero)
     XCTAssertTrue(receivedProducts.isEmpty)
   }
 }

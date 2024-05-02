@@ -35,7 +35,7 @@ struct MockSession: URLSessionProvider {
     guard
       let data = responseData
     else {
-      if error is NoStubError, let err = error {
+      if let err = error {
         return Fail(error: err)
           .eraseToAnyPublisher()
       }
