@@ -9,21 +9,14 @@ import SwiftUI
 
 @main
 struct ProductListingExcerciseApp: App {
-  private let networkManager: NetworkProvider = NetworkManager(
-    scheme: .https,
-    baseURLString: "cdn.develop.gymshark.com"
-  )
-  
-  var currencyFormatter: NumberFormatter {
-    let formatter = NumberFormatter()
-    formatter.numberStyle = .currency
-    formatter.maximumFractionDigits = 2
-    formatter.minimumFractionDigits = 2
-    formatter.locale = Locale(identifier: "en_GB")
-    formatter.currencyCode = "£"
-    return formatter
+  private var networkManager: NetworkProvider {
+    NetworkManager(
+      scheme: .https,
+      baseURLString: "cdn.develop.gymshark.com",
+      session: AppURLSession()
+    )
   }
-  
+
   var body: some Scene {
     WindowGroup {
       ProductListScreen(
@@ -31,7 +24,9 @@ struct ProductListingExcerciseApp: App {
           productListUseCase: ProductListUseCase(
             networkManager: networkManager
           ),
-          productMapper: ProductDataToModelMapper(currencyFormatter: currencyFormatter)
+          productMapper: ProductDataToModelMapper(
+            currencyFormatter: Formatter.currencyFormatter()
+          )
         )
       )
     }

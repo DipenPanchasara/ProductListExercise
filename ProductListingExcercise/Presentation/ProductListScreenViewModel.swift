@@ -14,7 +14,15 @@ class ProductListScreenViewModel: ObservableObject {
   private var cancellables = Set<AnyCancellable>()
 
   @Published private (set)var products: [ProductModel] = []
+  @Published private (set)var viewState: ViewState = .idle
 
+  enum ViewState: Equatable {
+    case idle
+    case loading
+    case loaded
+    case error
+  }
+  
   init(
     productListUseCase: ProductListUseCaseProvider,
     productMapper: ProductDataToModelMapping
@@ -22,22 +30,26 @@ class ProductListScreenViewModel: ObservableObject {
     self.productListUseCase = productListUseCase
     self.productMapper = productMapper
   }
-
+  
   func loadData() {
+    guard viewState != .loaded else { return }
+    viewState = .loading
     let productListUseCasePublisher = productListUseCase.run()
     productListUseCasePublisher
       .receive(on: DispatchQueue.main)
-      .map({ productsData in
-        return productsData.hits.map { dataModel in
+      .map { productsData in
+        return productsData.map { dataModel in
           self.productMapper.map(source: dataModel)
         }
-      })
+      }
       .sink { completion in
         switch completion {
           case .finished:
             print("Products Loaded")
+            self.viewState = .loaded
           case .failure(let error):
             print("Failed with error: \(error)")
+            self.viewState = .error
         }
       } receiveValue: { [weak self] productModels in
         guard let self = self else { return }

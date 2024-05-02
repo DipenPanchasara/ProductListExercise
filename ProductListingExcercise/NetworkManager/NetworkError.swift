@@ -7,18 +7,18 @@
 
 import Foundation
 
-enum NetworkError: Error {
-  case badURL(_ request: NetworkRequest)
+enum NetworkError: Error, Equatable {
+  case badURL(request: NetworkRequest)
   case invalidResponse
   case invalidRequest
   case badRequest
   case unauthorized
   case forbidden
   case notFound
-  case error4xx(_ code: Int)
+  case error4xx(code: Int)
   case serverError
-  case error5xx(_ code: Int)
-  case urlSessionFailed(_ error: URLError)
+  case error5xx(code: Int)
+  case urlSessionFailed(error: URLError)
   case timeOut
   case unknownError
 }

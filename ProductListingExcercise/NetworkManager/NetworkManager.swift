@@ -11,12 +11,6 @@ import Combine
 // Request URL
 // https://cdn.develop.gymshark.com/training/mock-product-responses/algolia-example-payload.json
 
-protocol URLSessionProvider {
-  func dataTaskPublisher(for request: URLRequest) -> URLSession.DataTaskPublisher
-}
-
-extension URLSession: URLSessionProvider {}
-
 protocol NetworkProvider {
   func execute(networkRequest: NetworkRequest) -> AnyPublisher<NetworkResponse, NetworkError>
 }
@@ -31,11 +25,11 @@ final class NetworkManager: NetworkProvider {
   private let baseURLString: String
   private let session: URLSessionProvider
   
-  init(scheme: Scheme, baseURLString: String) {
+  init(scheme: Scheme, baseURLString: String, session: URLSessionProvider) {
     self.scheme = scheme
     self.baseURLString = baseURLString
-
-    self.session = URLSession(configuration: .default)
+    self.session = session
+//    self.session = URLSession(configuration: .default)
   }
 
   func execute(networkRequest: NetworkRequest) -> AnyPublisher<NetworkResponse, NetworkError> {
@@ -43,7 +37,7 @@ final class NetworkManager: NetworkProvider {
     do {
       urlRequest = try prepareURLRequest(networkRequest: networkRequest)
     } catch {
-      return Fail(error: NetworkError.badURL(networkRequest))
+      return Fail(error: NetworkError.badURL(request: networkRequest))
         .eraseToAnyPublisher()
     }
         
@@ -71,7 +65,7 @@ extension NetworkManager {
     guard
       let url = components.url
     else {
-      throw NetworkError.badURL(networkRequest)
+      throw NetworkError.badURL(request: networkRequest)
     }
     var request = URLRequest(url: url)
     request.httpMethod = networkRequest.httpMethod.value
@@ -109,9 +103,9 @@ private extension NetworkManager {
       case 401: return .unauthorized
       case 403: return .forbidden
       case 404: return .notFound
-      case 402, 405...499: return .error4xx(statusCode)
+      case 402, 405...499: return .error4xx(code: statusCode)
       case 500: return .serverError
-      case 501...599: return .error5xx(statusCode)
+      case 501...599: return .error5xx(code: statusCode)
       default: return .unknownError
     }
   }
@@ -119,7 +113,7 @@ private extension NetworkManager {
   func mapError(error: Error) -> NetworkError {
     switch error {
       case let urlError as URLError:
-        return .urlSessionFailed(urlError)
+        return .urlSessionFailed(error: urlError)
       case let error as NetworkError:
         return error
       default:

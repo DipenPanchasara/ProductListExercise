@@ -41,28 +41,16 @@ struct ProductListScreen: View {
   ProductListScreen(
     viewModel: ProductListScreenViewModel(
       productListUseCase: MockProductListUseCase(),
-      productMapper: ProductDataToModelMapper(currencyFormatter: currencyFormatter)
+      productMapper: ProductDataToModelMapper(
+        currencyFormatter: Formatter.currencyFormatter()
+      )
     )
   )
 }
 
-private var currencyFormatter: NumberFormatter {
-  let formatter = NumberFormatter()
-  formatter.numberStyle = .currency
-  formatter.maximumFractionDigits = 2
-  formatter.minimumFractionDigits = 2
-  formatter.locale = Locale(identifier: "en_GB")
-  formatter.currencyCode = "£"
-  return formatter
-}
-
 struct MockProductListUseCase: ProductListUseCaseProvider {
-  func run() -> AnyPublisher<ProductsData, UseCaseError> {
-    Just(
-      ProductsData(
-        hits: mockProductsData
-      )
-    )
+  func run() -> AnyPublisher<[ProductsData.ProductData], UseCaseError> {
+    Just(mockProductsData)
       .setFailureType(to: UseCaseError.self)
       .eraseToAnyPublisher()
   }

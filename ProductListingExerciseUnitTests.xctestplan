@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "EC0BFCA2-FB78-4BF0-B9E1-A17FCC9382AD",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:ProductListingExercise.xcodeproj",
+        "identifier" : "25B1C0E62BDECAE6001BA7E3",
+        "name" : "ProductListingExerciseTests"
+      }
+    }
+  ],
+  "version" : 1
+}
