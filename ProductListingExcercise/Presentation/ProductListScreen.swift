@@ -23,6 +23,7 @@ struct ProductListScreen: View {
       .task {
         viewModel.loadData()
       }
+      .redacted(reason: viewModel.viewState == .loading ? .placeholder : .invalidated)
   }
 
   var listView: some View {

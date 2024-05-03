@@ -13,6 +13,7 @@ class ProductListScreenViewModel: ObservableObject {
   private let productMapper: ProductDataToModelMapping
   private var cancellables = Set<AnyCancellable>()
   private let router: RoutingProvider
+
   @Published private (set)var products: [ProductModel] = []
   @Published private (set)var viewState: ViewState = .idle
 

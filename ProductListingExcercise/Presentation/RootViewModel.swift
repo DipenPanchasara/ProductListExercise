@@ -10,10 +10,10 @@ import Foundation
 import SwiftUI
 
 class RootViewModel: ObservableObject {
-  @Published var router = Router()
-
   private var networkManager: NetworkProvider
   private var cancellable : AnyCancellable?
+
+  @Published var router = Router()
 
   lazy var productListScreenViewModel: ProductListScreenViewModel = {
     ProductListScreenViewModelFactory.make(

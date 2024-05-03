@@ -21,13 +21,15 @@ struct ProductCard: View {
     VStack(spacing: .zero) {
       ZStack(alignment: .bottom) {
         imageView()
-          VStack(alignment: .leading, spacing: Spacing.x2) {
+        VStack(spacing: Spacing.x2) {
             titleView
+          HStack(spacing: .zero) {
             labelView
             priceView
           }
-          .frame(maxWidth: .infinity)
-          .background(contentColor)
+          .padding(.bottom, Spacing.x2)
+        }
+        .background(contentColor)
       }
     }
     .background(backgroundColor)
@@ -63,42 +65,36 @@ private extension ProductCard {
   }
   
   var titleView: some View {
-    HStack(alignment: .center, spacing: .zero) {
-      Text(viewModel.title)
-        .font(.title2)
-        .bold()
-        .foregroundStyle(.white)
-        .lineLimit(2)
-        .padding(.horizontal, Spacing.x2)
-        .padding(.top, Spacing.x2)
-      Spacer()
-    }
+    Text(viewModel.title)
+      .font(.title)
+      .bold()
+      .foregroundStyle(.white)
+      .lineLimit(2)
+      .padding(.horizontal, Spacing.x2)
+      .padding(.top, Spacing.x2)
+      .frame(maxWidth: .infinity, alignment: .leading)
   }
   
   @ViewBuilder
   var labelView: some View {
     if let labels = viewModel.labels {
-      HStack(alignment: .center, spacing: .zero) {
-        Text(labels)
-          .font(.body)
-          .foregroundStyle(.white)
-          .lineLimit(2)
-          .multilineTextAlignment(.leading)
-          .padding(.horizontal, Spacing.x2)
-        Spacer()
-      }
+      Text(labels)
+        .font(.body)
+        .foregroundStyle(.white)
+        .lineLimit(2)
+        .padding(.horizontal, Spacing.x2)
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
   }
   
   var priceView: some View {
-    HStack {
-      Text(viewModel.price)
-        .font(.title3)
-        .bold()
-        .padding(.horizontal, Spacing.x2)
-        .padding(.bottom, Spacing.x2)
-      Spacer()
-    }
+    Text(viewModel.price)
+      .font(.title)
+      .bold()
+      .foregroundStyle(.white)
+      .padding(.horizontal, Spacing.x2)
+      .padding(.bottom, Spacing.x2)
+      .frame(alignment: .trailing)
   }
 }
 
