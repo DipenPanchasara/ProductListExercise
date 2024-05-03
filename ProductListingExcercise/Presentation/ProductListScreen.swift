@@ -11,28 +11,33 @@ import Combine
 struct ProductListScreen: View {
   @ObservedObject
   private var viewModel: ProductListScreenViewModel
-  
-  private let columns = [
-    GridItem(.flexible())
-  ]
-  
+
   init(viewModel: ProductListScreenViewModel) {
     self.viewModel = viewModel
   }
-  
+
   var body: some View {
-    ScrollView {
-      LazyVGrid(columns: columns, spacing: Spacing.x2) {
-        ForEach(viewModel.products) { product in
-          ProductCard(model: product)
-            .padding(.top, Spacing.x2)
-        }
+    listView
+      .navigationTitle("Products")
+      .navigationBarTitleDisplayMode(.inline)
+      .task {
+        viewModel.loadData()
       }
-      .padding()
+  }
+
+  var listView: some View {
+    List {
+      ForEach(viewModel.products) { product in
+        ProductCard(model: product)
+          .padding(.top, Spacing.x2)
+          .onTapGesture {
+            viewModel.onProductSelect(product: product)
+          }
+          .listRowSeparator(.hidden)
+          .shadow(radius: 8)
+      }
     }
-    .task {
-      viewModel.loadData()
-    }
+    .listStyle(.plain)
   }
 }
 
@@ -40,6 +45,7 @@ struct ProductListScreen: View {
 #Preview {
   ProductListScreen(
     viewModel: ProductListScreenViewModel(
+      router: Router(),
       productListUseCase: MockProductListUseCase(),
       productMapper: ProductDataToModelMapper(
         currencyFormatter: Formatter.currencyFormatter()

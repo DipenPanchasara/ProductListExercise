@@ -11,7 +11,8 @@ struct ProductCard: View {
   private let contentColor = Color.black.opacity(.colorOpacity)
   private let backgroundColor = Color.gray.opacity(.backgroundOpacity)
   private let failureColor = Color.red.opacity(.colorOpacity)
-  
+  private let maxHeight: CGFloat = 420
+
   let model: ProductModel
   
   var body: some View {
@@ -33,7 +34,7 @@ struct ProductCard: View {
         cornerSize: CGSize(width: Spacing.x4, height: Spacing.x4)
       )
     )
-    .frame(maxWidth: .infinity, maxHeight: 450)
+    .frame(maxWidth: .infinity, maxHeight: maxHeight)
   }
 }
 
@@ -54,7 +55,7 @@ private extension ProductCard {
               .resizable()
               .scaledToFit()
               .foregroundStyle(.gray.opacity(.colorOpacity))
-              .frame(width: 100, height: 100)
+              .frame(width: 200, height: 200)
           case .success(let image):
             image
               .resizable()
@@ -64,7 +65,7 @@ private extension ProductCard {
             emptyImageView
         }
       }
-      .frame(minHeight: 450)
+      .frame(minHeight: maxHeight)
       }
     }
   }

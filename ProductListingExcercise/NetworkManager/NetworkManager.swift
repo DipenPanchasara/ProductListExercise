@@ -15,21 +15,37 @@ protocol NetworkProvider {
   func execute(networkRequest: NetworkRequest) -> AnyPublisher<NetworkResponse, NetworkError>
 }
 
+struct NetworkConfig {
+  enum Scheme: String {
+    case http
+    case https
+  }
+
+  let scheme: String
+  let baseURL: String
+  
+  init(scheme: Scheme, baseURL: String) {
+    self.scheme = scheme.rawValue
+    self.baseURL = baseURL
+  }
+}
+
 final class NetworkManager: NetworkProvider {
   enum Scheme: String {
     case http
     case https
   }
-  
+
   private let scheme: Scheme
   private let baseURLString: String
+  private let networkConfig: NetworkConfig
   private let session: URLSessionProvider
   
   init(scheme: Scheme, baseURLString: String, session: URLSessionProvider) {
     self.scheme = scheme
     self.baseURLString = baseURLString
     self.session = session
-//    self.session = URLSession(configuration: .default)
+    self.networkConfig = NetworkConfig(scheme: .https, baseURL: "")
   }
 
   func execute(networkRequest: NetworkRequest) -> AnyPublisher<NetworkResponse, NetworkError> {

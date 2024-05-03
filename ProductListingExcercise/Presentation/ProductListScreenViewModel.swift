@@ -12,10 +12,15 @@ class ProductListScreenViewModel: ObservableObject {
   private let productListUseCase: ProductListUseCaseProvider
   private let productMapper: ProductDataToModelMapping
   private var cancellables = Set<AnyCancellable>()
-
+  private let router: RoutingProvider
   @Published private (set)var products: [ProductModel] = []
   @Published private (set)var viewState: ViewState = .idle
 
+  enum ProductRoute: Hashable {
+    case productDetail(ProductModel)
+  }
+
+  
   enum ViewState: Equatable {
     case idle
     case loading
@@ -24,9 +29,11 @@ class ProductListScreenViewModel: ObservableObject {
   }
   
   init(
+    router: RoutingProvider,
     productListUseCase: ProductListUseCaseProvider,
     productMapper: ProductDataToModelMapping
   ) {
+    self.router = router
     self.productListUseCase = productListUseCase
     self.productMapper = productMapper
   }
@@ -45,10 +52,8 @@ class ProductListScreenViewModel: ObservableObject {
       .sink { completion in
         switch completion {
           case .finished:
-            print("Products Loaded")
             self.viewState = .loaded
           case .failure(let error):
-            print("Failed with error: \(error)")
             self.viewState = .error
         }
       } receiveValue: { [weak self] productModels in
@@ -56,5 +61,12 @@ class ProductListScreenViewModel: ObservableObject {
         self.products.append(contentsOf: productModels)
       }
       .store(in: &cancellables)
+  }
+}
+
+@MainActor
+extension ProductListScreenViewModel {
+  func onProductSelect(product: ProductModel) {
+    router.push(ProductRoute.productDetail(product))
   }
 }

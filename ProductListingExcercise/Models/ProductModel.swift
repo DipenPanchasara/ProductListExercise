@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProductModel: Identifiable, Equatable {
+struct ProductModel: Identifiable, Equatable, Hashable {
   let id: Int
   let title: String
   let labels: [String]
@@ -18,7 +18,7 @@ struct ProductModel: Identifiable, Equatable {
 }
 
 extension ProductModel {
-  struct Media: Identifiable, Equatable {
+  struct Media: Identifiable, Equatable, Hashable {
     let id: Int
     let productId: Int
     let imageURLString: String?
