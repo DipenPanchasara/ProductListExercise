@@ -28,7 +28,7 @@ struct ProductListScreen: View {
   var listView: some View {
     List {
       ForEach(viewModel.products) { product in
-        ProductCard(model: product)
+        ProductCard(viewModel: ProductCardViewModel(model: product))
           .padding(.top, Spacing.x2)
           .onTapGesture {
             viewModel.onProductSelect(product: product)

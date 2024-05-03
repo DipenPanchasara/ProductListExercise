@@ -5,6 +5,7 @@
 //  Created by Dipen Panchasara on 29/04/2024.
 //
 
+import Combine
 import SwiftUI
 
 struct ProductCard: View {
@@ -13,8 +14,9 @@ struct ProductCard: View {
   private let failureColor = Color.red.opacity(.colorOpacity)
   private let maxHeight: CGFloat = 420
 
-  let model: ProductModel
-  
+  @ObservedObject
+  var viewModel: ProductCardViewModel
+
   var body: some View {
     VStack(spacing: .zero) {
       ZStack(alignment: .bottom) {
@@ -42,31 +44,11 @@ private extension ProductCard {
   @ViewBuilder
   func imageView() -> some View {
     VStack(spacing: .zero) {
-      if
-        let imageURLString = model.featuredMedia.imageURLString,
-        let imageURL = URL(string: imageURLString)
-      {
-      AsyncImage(url: imageURL) { phase in
-        switch phase {
-          case .empty:
-            emptyImageView
-          case .failure:
-            Image(systemName: "photo")
-              .resizable()
-              .scaledToFit()
-              .foregroundStyle(.gray.opacity(.colorOpacity))
-              .frame(width: 200, height: 200)
-          case .success(let image):
-            image
-              .resizable()
-              .aspectRatio(contentMode:
-                  .fit)
-          @unknown default:
-            emptyImageView
-        }
-      }
+      viewModel.image
+        .resizable()
+        .scaledToFit()
+        .foregroundStyle(.gray.opacity(.colorOpacity))
       .frame(minHeight: maxHeight)
-      }
     }
   }
   
@@ -82,7 +64,7 @@ private extension ProductCard {
   
   var titleView: some View {
     HStack(alignment: .center, spacing: .zero) {
-      Text(model.title)
+      Text(viewModel.title)
         .font(.title2)
         .bold()
         .foregroundStyle(.white)
@@ -95,9 +77,9 @@ private extension ProductCard {
   
   @ViewBuilder
   var labelView: some View {
-    if !model.labels.isEmpty {
+    if let labels = viewModel.labels {
       HStack(alignment: .center, spacing: .zero) {
-        Text(model.labels.joined(separator: ", "))
+        Text(labels)
           .font(.body)
           .foregroundStyle(.white)
           .lineLimit(2)
@@ -110,10 +92,9 @@ private extension ProductCard {
   
   var priceView: some View {
     HStack {
-      Text(model.formattedPrice)
+      Text(viewModel.price)
         .font(.title3)
         .bold()
-        .foregroundStyle(.green)
         .padding(.horizontal, Spacing.x2)
         .padding(.bottom, Spacing.x2)
       Spacer()
@@ -124,14 +105,19 @@ private extension ProductCard {
 // MARK: - Previews
 #if DEBUG
 #Preview("With Image") {
-    ProductCard(model: .mock())
+//    ProductCard(model: .mock())
+  ProductCard(viewModel: ProductCardViewModel(model: .mock()))
 }
 
 #Preview("Without Image") {
-  ProductCard(model: .mock(hasImage: false))
+  ProductCard(
+    viewModel: ProductCardViewModel(
+      model: .mock(hasImage: false)
+    )
+  )
 }
 
-private extension ProductModel {
+ extension ProductModel {
   static func mock(hasImage: Bool = true) -> ProductModel {
     ProductModel(
       id: 1,
