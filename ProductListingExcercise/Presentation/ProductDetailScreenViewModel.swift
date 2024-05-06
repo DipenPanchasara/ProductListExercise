@@ -5,43 +5,71 @@
 //  Created by Dipen Panchasara on 03/05/2024.
 //
 
-import Foundation
+import Combine
+import SwiftUI
 
 final class ProductDetailScreenViewModel: ObservableObject {
-  var model: ProductModel
-  private(set) var rows: [Row] = []
-  
-  init(model: ProductModel) {
+  @Published var image: Image?
+  private let model: ProductDisplayModel
+  private var state: State = .idle
+  private var cancellable: AnyCancellable?
+  private(set) var rows: [RowView.Model] = []
+
+  var labels: String?
+  let title: String
+  let price: String
+
+  enum State {
+    case idle
+    case loading
+    case loaded
+  }
+
+  init(model: ProductDisplayModel) {
     self.model = model
-    
-    rows.append(Row(title: "", value: model.title))
-    if let labels {
-      rows.append(Row(title: "", value: labels))
-    }
-    rows.append(Row(title: "", value: model.title))
+    title = model.title
+    price = model.price
+    labels = model.labels
+    prepareRows()
   }
   
-  private var labels: String? {
-    if model.labels.isEmpty {
-      return nil
-    }
-    return model.labels.joined(separator: ", ")
-  }
-  
-  private var title: String {
-    model.title
-  }
-  
-  var price: String {
-    model.formattedPrice
+  private func prepareRows() {
+    rows.append(RowView.Model(title: "Color", value: model.color))
+    rows.append(RowView.Model(value: model.description, type: .markdown))
   }
 }
 
-struct Row: Identifiable {
-  let title: String
-  let value: String
-  
-  var id: String {
-    title + value
+extension ProductDetailScreenViewModel {
+  @MainActor
+  func loadImage() {
+    guard
+      image == nil,
+      state == .idle
+    else {  return }
+    state = .loading
+    if
+      let urlString = model.urlString,
+      let url = URL(string: urlString)
+    {
+    let request = URLRequest(url: url)
+    cancellable = URLSession.shared.dataTaskPublisher(for: request)
+      .receive(on: DispatchQueue.main)
+      .tryMap {
+        guard
+          let httpResponse = $0.response as? HTTPURLResponse,
+          httpResponse.statusCode == 200,
+          let image = UIImage(data: $0.data)
+        else {
+          throw URLError(.badServerResponse)
+        }
+        return Image(uiImage: image)
+      }
+      .sink(
+        receiveCompletion: { _ in },
+        receiveValue: { [weak self] receivedImage in
+          self?.state = .loaded
+          self?.image = receivedImage
+        })
+    }
   }
 }

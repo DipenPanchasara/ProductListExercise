@@ -29,7 +29,11 @@ struct ProductListScreen: View {
   var listView: some View {
     List {
       ForEach(viewModel.products) { product in
-        ProductCard(viewModel: ProductCardViewModel(model: product))
+        ProductCard(
+          viewModel: ProductCardViewModel(
+            model: ProductDisplayModel(model: product)
+          )
+        )
           .padding(.top, Spacing.x2)
           .onTapGesture {
             viewModel.onProductSelect(product: product)
@@ -68,6 +72,7 @@ private extension MockProductListUseCase {
     ProductsData.ProductData(
       id: Int.random(in: 0...100),
       title: "anyTitle",
+      description: "<p><strong>RUN WITH IT</strong></p>\n<p><br data-mce-fragment=\"1\">Your run requires enduring comfort and support, so step out and hit the road in Speed. Made with zero-distractions and lightweight, ventilating fabrics that move with you, you can trust in Speed no matter how far you go.</p>\n<p> </p>\n<p><br data-mce-fragment=\"1\">- Full length legging<br data-mce-fragment=\"1\">- High-waisted<br data-mce-fragment=\"1\">- Compressive fit<br data-mce-fragment=\"1\">- Internal adjustable elastic/drawcord at front waistband<br data-mce-fragment=\"1\">- Pocket to back of waistband<br data-mce-fragment=\"1\">- Reflective Gymshark sharkhead logo to ankle<br data-mce-fragment=\"1\">- Main: 88% Polyester 12% Elastane. Internal Mesh: 76% Nylon 24% Elastane<br data-mce-fragment=\"1\">- We've cut down our use of swing tags, so this product comes without one<br data-mce-fragment=\"1\">- Model is <meta charset=\"utf-8\"><span data-usefontface=\"true\" data-contrast=\"none\" class=\"TextRun SCXP103297068 BCX0\" lang=\"EN-GB\" data-mce-fragment=\"1\" xml:lang=\"EN-GB\"><span class=\"NormalTextRun SCXP103297068 BCX0\" data-mce-fragment=\"1\">5'3\" and wears a size M</span></span><br>- SKU: B3A3E-BBBB</p>",
       labels: ["anyLable_1"],
       colour: "anyColor",
       price: 12.99,

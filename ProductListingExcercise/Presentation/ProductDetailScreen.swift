@@ -8,24 +8,37 @@
 import SwiftUI
 
 struct ProductDetailScreen: View {
+  @ObservedObject
   var viewModel: ProductDetailScreenViewModel
-  
+
   var body: some View {
     ScrollView {
-      photoGallery
-      ForEach(viewModel.rows) { row in
-        RowView(title: row.title, value: row.value)
+      headerView
+      VStack(spacing: .zero) {
+        ForEach(viewModel.rows) { model in
+          switch model.type {
+            case .text:
+              RowView(model: viewModel.rows.first!)
+            case .markdown:
+              HTMLView(htmlContent: viewModel.rows.last!.value)
+                .frame(maxWidth: .infinity, maxHeight: 600)
+          }
+        }
       }
     }
-//    .listStyle(.plain)
-//    .navigationTitle("Some Product")
+    .navigationTitle(viewModel.title)
+    .navigationBarTitleDisplayMode(.inline)
+    .task {
+      viewModel.loadImage()
+    }
   }
   
-  var photoGallery: some View {
+  var headerView: some View {
     ZStack(alignment: .bottom) {
-      PhotoGalleryView()
+      imageView
         .listRowInsets(EdgeInsets())
       HStack(spacing: .zero) {
+        labelView
         Spacer()
         priceView
       }
@@ -33,6 +46,18 @@ struct ProductDetailScreen: View {
     }
   }
   
+  @ViewBuilder
+  var labelView: some View {
+    if let labels = viewModel.labels {
+      Text(labels)
+        .font(.body)
+        .foregroundStyle(.white)
+        .lineLimit(2)
+        .padding(.horizontal, Spacing.x2)
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+  }
+
   var priceView: some View {
     Text(viewModel.price)
       .font(.title)
@@ -43,55 +68,29 @@ struct ProductDetailScreen: View {
       .frame(alignment: .trailing)
   }
 
-}
-
-#Preview {
-  ProductDetailScreen(viewModel: ProductDetailScreenViewModel(model: .mock()))
-}
-
-struct RowView: View {
-  let title: String
-  let value: String
-  
-  var body: some View {
-    HStack(alignment: .center) {
-      VStack(alignment: .leading, spacing: .zero) {
-        Text(title.capitalized)
-          .font(.subheadline)
-          .bold()
-        Text(value)
-          .font(.body)
-          .multilineTextAlignment(.leading)
-      }
-      Spacer()
+  var imageView: some View {
+    let image = viewModel.image ?? Image(systemName: "photo")
+    return VStack(spacing: .zero) {
+      image
+        .resizable()
+        .scaledToFit()
+        .foregroundStyle(.gray.opacity(.colorOpacity))
+        .frame(minHeight: .imageHeight)
     }
-    .padding(.horizontal, Spacing.x2)
-    .padding(.vertical, Spacing.x1)
-    Divider()
   }
 }
 
-struct PhotoGalleryView: View {
-  var body: some View {
-    ScrollView(.horizontal) {
-      LazyHStack(spacing: .zero) {
-        ForEach(0..<5) { _ in
-          Image(systemName: "photo")
-            .resizable()
-            .scaledToFit()
-            .frame(width: .infinity,height: .photoHeight)
-            .containerRelativeFrame(.horizontal)
-        }
-      }
-      .scrollTargetLayout()
-    }
-    .defaultScrollAnchor(.zero)
-    .scrollIndicators(.never)
-    .scrollTargetBehavior(.paging)
-    .frame(maxWidth: .infinity, maxHeight: .photoHeight)
+#Preview {
+  NavigationView {
+    ProductDetailScreen(
+      viewModel: ProductDetailScreenViewModel(
+        model: .mock()
+      )
+    )
   }
 }
 
 private extension CGFloat {
-  static let photoHeight: CGFloat = 400
+  static let imageHeight: CGFloat = 420
 }
+

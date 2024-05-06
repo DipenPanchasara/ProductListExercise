@@ -9,47 +9,79 @@ import Combine
 import SwiftUI
 
 final class ProductCardViewModel: ObservableObject {
-  @Published private(set) var image: Image
+  @Published var image: Image?
   private var cancellable: AnyCancellable?
-  private let model: ProductModel
+  private var state: State = .idle
   
-  var labels: String? {
-    if model.labels.isEmpty {
-      return nil
-    }
-    return model.labels.joined(separator: ", ")
+  let model: ProductDisplayModel
+  enum State {
+    case idle
+    case loading
+    case loaded
   }
-  
-  var title: String {
-    model.title
-  }
-  
-  var price: String {
-    model.formattedPrice
-  }
-  
-  init(model: ProductModel) {
-    self.image = Image(systemName: "photo")
+
+  init(model: ProductDisplayModel) {
     self.model = model
-    loadImage()
   }
-  
-  private func loadImage() {
-    if let imageURLString = model.featuredMedia.imageURLString {
-      cancellable = ImageLoader.shared.image(for: imageURLString)
-        .receive(on: DispatchQueue.main)
-        .sink(receiveCompletion: { completion in
-          if case let .failure(error) = completion {
-            print("ImageLoading failed with error: \(error)")
-          }
-        }) { status in
-          switch status {
-            case .loading, .notFound, .badURL:
-              break
-            case .loaded(let image):
-              self.image = image
-          }
+
+  func setImage(image: Image) {
+    self.image = image
+  }
+
+  @MainActor
+  func loadImage() {
+    guard 
+      image == nil,
+      state == .idle
+    else {  return }
+    state = .loading
+    if
+      let urlString = model.urlString,
+      let url = URL(string: urlString)
+    {
+    let request = URLRequest(url: url)
+    cancellable = URLSession.shared.dataTaskPublisher(for: request)
+      .receive(on: DispatchQueue.main)
+      .tryMap {
+        guard
+          let httpResponse = $0.response as? HTTPURLResponse,
+          httpResponse.statusCode == 200,
+          let image = UIImage(data: $0.data)
+        else {
+          throw URLError(.badServerResponse)
         }
+        return Image(uiImage: image)
+      }
+      .sink(
+        receiveCompletion: { completion in
+        }, 
+        receiveValue: { [weak self] receivedImage in
+          self?.state = .loaded
+          self?.image = receivedImage
+      })
     }
   }
 }
+
+//extension ProductCardViewModel {
+//  struct DisplayModel: Hashable {
+//    let id: Int
+//    let title: String
+//    var description: String
+//    let price: String
+//    var labels: String?
+//    let urlString: String?
+//    var color: String
+//    
+//    init(model: ProductModel) {
+//      id = model.id
+//      title = model.title
+//      description = model.description
+//      price = model.formattedPrice
+//      labels = !model.labels.isEmpty ? model.labels.joined(separator: ", ") : nil
+//      urlString = model.featuredMedia.imageURLString
+//      color = model.colour
+//    }
+//  }
+//}
+

@@ -10,6 +10,7 @@ import Foundation
 struct ProductModel: Identifiable, Equatable, Hashable {
   let id: Int
   let title: String
+  let description: String
   let labels: [String]
   let colour: String
   let price: Double

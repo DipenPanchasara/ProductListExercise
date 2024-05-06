@@ -22,6 +22,7 @@ struct ProductDataToModelMapper: ProductDataToModelMapping {
     ProductModel(
       id: source.id,
       title: source.title,
+      description: source.description,
       labels: source.labels ?? [],
       colour: source.colour,
       price: source.price,

@@ -26,7 +26,7 @@ extension View {
     self.navigationDestination(for: ProductListScreenViewModel.ProductRoute.self) { destination in
       switch destination {
         case .productDetail(let model):
-          Text("Product: \(model.title)")
+          ProductDetailScreen(viewModel: ProductDetailScreenViewModel(model: model))
       }
     }
   }

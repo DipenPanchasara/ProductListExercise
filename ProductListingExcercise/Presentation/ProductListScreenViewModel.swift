@@ -18,10 +18,9 @@ class ProductListScreenViewModel: ObservableObject {
   @Published private (set)var viewState: ViewState = .idle
 
   enum ProductRoute: Hashable {
-    case productDetail(ProductModel)
+    case productDetail(ProductDisplayModel)
   }
 
-  
   enum ViewState: Equatable {
     case idle
     case loading
@@ -54,7 +53,7 @@ class ProductListScreenViewModel: ObservableObject {
         switch completion {
           case .finished:
             self.viewState = .loaded
-          case .failure(let error):
+          case .failure(_):
             self.viewState = .error
         }
       } receiveValue: { [weak self] productModels in
@@ -68,6 +67,7 @@ class ProductListScreenViewModel: ObservableObject {
 @MainActor
 extension ProductListScreenViewModel {
   func onProductSelect(product: ProductModel) {
-    router.push(ProductRoute.productDetail(product))
+    let model = ProductDisplayModel(model: product)
+    router.push(ProductRoute.productDetail(model))
   }
 }

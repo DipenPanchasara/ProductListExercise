@@ -15,6 +15,7 @@ extension ProductsData {
   struct ProductData: Codable {
     let id: Int
     let title: String
+    let description: String
     let labels: [String]?
     let colour: String
     let price: Double
