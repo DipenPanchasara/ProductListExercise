@@ -19,6 +19,7 @@ final class ProductListScreenViewModelUnitTests: XCTestCase {
   func testInit() {
     let mockUseCase = MockProductListUseCase(error: MockError.noData)
     let sut = ProductListScreenViewModel(
+      router: Router(),
       productListUseCase: mockUseCase,
       productMapper: ProductDataToModelMapper(currencyFormatter: currencyFormatter)
     )
@@ -30,6 +31,7 @@ final class ProductListScreenViewModelUnitTests: XCTestCase {
     let mockModels = mockProductModels
     let mockUseCase = MockProductListUseCase(productData: mockProductsData)
     let sut = ProductListScreenViewModel(
+      router: Router(),
       productListUseCase: mockUseCase,
       productMapper: ProductDataToModelMapper(currencyFormatter: currencyFormatter)
     )
@@ -52,6 +54,7 @@ final class ProductListScreenViewModelUnitTests: XCTestCase {
 //    let expecation = expectation(description: "Wait for Product UseCase to throw")
     let mockUseCase = MockProductListUseCase(error: MockError.noData)
     let sut = ProductListScreenViewModel(
+      router: Router(),
       productListUseCase: mockUseCase,
       productMapper: ProductDataToModelMapper(currencyFormatter: currencyFormatter)
     )
@@ -86,6 +89,7 @@ private extension ProductListScreenViewModelUnitTests {
     ProductsData.ProductData(
       id: 1,
       title: "anyTitle",
+      description: "anyDescription",
       labels: ["anyLable_1"],
       colour: "anyColor",
       price: 12.99,
@@ -105,6 +109,7 @@ private extension ProductListScreenViewModelUnitTests {
     ProductModel(
       id: 1,
       title: "anyTitle",
+      description: "anyDescription",
       labels: ["anyLable_1"],
       colour: "anyColor",
       price: 12.99,

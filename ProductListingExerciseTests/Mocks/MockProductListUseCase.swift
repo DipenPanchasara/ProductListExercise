@@ -59,6 +59,7 @@ private extension MockProductListUseCase {
     ProductsData.ProductData(
       id: Int.random(in: 0...100),
       title: "anyTitle",
+      description: "anyDescription",
       labels: ["anyLable_1"],
       colour: "anyColor",
       price: 12.99,

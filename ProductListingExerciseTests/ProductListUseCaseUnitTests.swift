@@ -82,6 +82,7 @@ private extension ProductListUseCaseUnitTests {
     ProductsData.ProductData(
       id: 1,
       title: "anyTitle",
+      description: "anyDescription",
       labels: ["anyLable_1"],
       colour: "anyColor",
       price: 12.99,
