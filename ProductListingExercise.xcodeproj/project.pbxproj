@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2566F0942BE0F72600E51819 /* ProductListScreenViewModelUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2566F0932BE0F72500E51819 /* ProductListScreenViewModelUnitTests.swift */; };
 		2566F0972BE0F72C00E51819 /* MockProductListUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2566F0952BE0F72C00E51819 /* MockProductListUseCase.swift */; };
+		256D9D282BE5871D00BF4091 /* ProductDetailScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 256D9D272BE5871D00BF4091 /* ProductDetailScreen.swift */; };
+		256D9D2A2BE5872500BF4091 /* ProductDetailScreenViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 256D9D292BE5872500BF4091 /* ProductDetailScreenViewModel.swift */; };
 		2570CD8C2BDFB06D00865DFA /* ProductModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2570CD8B2BDFB06D00865DFA /* ProductModel.swift */; };
 		2570CD8E2BDFB07E00865DFA /* ProductsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2570CD8D2BDFB07E00865DFA /* ProductsData.swift */; };
 		2570CD912BDFB28600865DFA /* ProductListUseCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2570CD902BDFB28600865DFA /* ProductListUseCase.swift */; };
@@ -60,6 +62,8 @@
 		2566F0922BE0F6C700E51819 /* ProductListingExerciseUnitTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ProductListingExerciseUnitTests.xctestplan; sourceTree = "<group>"; };
 		2566F0932BE0F72500E51819 /* ProductListScreenViewModelUnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductListScreenViewModelUnitTests.swift; sourceTree = "<group>"; };
 		2566F0952BE0F72C00E51819 /* MockProductListUseCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockProductListUseCase.swift; sourceTree = "<group>"; };
+		256D9D272BE5871D00BF4091 /* ProductDetailScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailScreen.swift; sourceTree = "<group>"; };
+		256D9D292BE5872500BF4091 /* ProductDetailScreenViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailScreenViewModel.swift; sourceTree = "<group>"; };
 		2570CD8B2BDFB06D00865DFA /* ProductModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductModel.swift; sourceTree = "<group>"; };
 		2570CD8D2BDFB07E00865DFA /* ProductsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsData.swift; sourceTree = "<group>"; };
 		2570CD902BDFB28600865DFA /* ProductListUseCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductListUseCase.swift; sourceTree = "<group>"; };
@@ -152,6 +156,8 @@
 				2570CD932BDFB8CA00865DFA /* ProductListScreenViewModel.swift */,
 				25CEB60E2BE4FB1600D17A0B /* RootView.swift */,
 				25CEB6102BE4FB2000D17A0B /* RootViewModel.swift */,
+				256D9D272BE5871D00BF4091 /* ProductDetailScreen.swift */,
+				256D9D292BE5872500BF4091 /* ProductDetailScreenViewModel.swift */,
 				25CEB6122BE53F0800D17A0B /* Router.swift */,
 			);
 			path = Presentation;
@@ -402,6 +408,7 @@
 			files = (
 				25CEB6112BE4FB2000D17A0B /* RootViewModel.swift in Sources */,
 				25B1C1062BDECB78001BA7E3 /* NetworkManager.swift in Sources */,
+				256D9D2A2BE5872500BF4091 /* ProductDetailScreenViewModel.swift in Sources */,
 				25CEB6182BE54A1300D17A0B /* ImageLoader.swift in Sources */,
 				2570CD9A2BDFEC5300865DFA /* ProductDataToModelMapper.swift in Sources */,
 				25B1C10A2BDED27F001BA7E3 /* NetworkResponse.swift in Sources */,
@@ -416,6 +423,7 @@
 				2570CD942BDFB8CA00865DFA /* ProductListScreenViewModel.swift in Sources */,
 				2570CD972BDFBF2200865DFA /* ProductCard.swift in Sources */,
 				25B1C1082BDED0D3001BA7E3 /* NetworkRequest.swift in Sources */,
+				256D9D282BE5871D00BF4091 /* ProductDetailScreen.swift in Sources */,
 				25CEB6162BE5447B00D17A0B /* ProductListScreenViewModelFactory.swift in Sources */,
 				25FE83692BE129AA00868357 /* Formatter.swift in Sources */,
 				2570CD8C2BDFB06D00865DFA /* ProductModel.swift in Sources */,
